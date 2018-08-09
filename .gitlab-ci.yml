@@ -6,8 +6,8 @@ build:linux-gpu:
   tags:
     - docker
     - linux
-  before_script:
-    - mkdir -p $HOME/.docker
-    - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
+  #before_script:
+  #  - mkdir -p $HOME/.docker
+  #  - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
   script:
     - docker build -t ubuntu18-phys-root .
