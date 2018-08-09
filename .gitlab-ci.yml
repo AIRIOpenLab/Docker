@@ -17,20 +17,25 @@ variables:
   DOCKER_DRIVER: overlay2
 
 services:
-- docker:dind
+  - docker:dind
 
 before_script:
-- docker info
+  - docker info
 
 
 stages:
-- build
+  - build
 
 build:linux-gpu:
   stage: build
-  #before_script:
-  #  - mkdir -p $HOME/.docker
-  #  - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
+  variables:
+    CONTAINER_IMAGE: airiopenlab/fisica-particelle-root
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
   script:
-  - docker build -t ubuntu18-phys-root .
-
+    - docker pull $CONTAINER_IMAGE:latest || true
+    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest .
+    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
+    - docker push $CONTAINER_IMAGE:latest
+  
