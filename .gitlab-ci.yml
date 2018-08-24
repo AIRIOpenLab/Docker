@@ -37,4 +37,19 @@ build:fisica-particelle-atlas:
     - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest ./fisica-particelle-atlas/
     - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
     - docker push $CONTAINER_IMAGE:latest
-  
+  only:
+    - web
+
+build:fisica-stato-solido:
+  stage: build
+  variables:
+    CONTAINER_IMAGE: airiopenlab/fisica-stato-solido
+  script:
+    - mkdir -p $HOME/.docker
+    - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
+    - docker pull $CONTAINER_IMAGE:latest || true
+    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest ./fisica-stato-solido/
+    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
+    - docker push $CONTAINER_IMAGE:latest
+  only:
+    - web
