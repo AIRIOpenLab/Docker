@@ -1,6 +1,6 @@
 FROM rootproject/root-ubuntu16:6.12
 
-MAINTAINER AIRI OpenLab <openlab@airicerca.org>
+LABEL maintainer="AIRI OpenLab <openlab@airicerca.org>"
 
 USER	builder
 
