@@ -1,55 +1,31 @@
-image: docker:stable
-
-variables:
-  # When using dind service we need to instruct docker, to talk with the
-  # daemon started inside of the service. The daemon is available with
-  # a network connection instead of the default /var/run/docker.sock socket.
-  #
-  # The 'docker' hostname is the alias of the service container as described at
-  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services
-  #
-  # Note that if you're using Kubernetes executor, the variable should be set to
-  # tcp://localhost:2375 because of how Kubernetes executor connects services
-  # to the job container
-  DOCKER_HOST: tcp://docker:2375/
-  # When using dind, it's wise to use the overlayfs driver for
-  # improved performance.
-  DOCKER_DRIVER: overlay2
-
-services:
-  - docker:dind
-
-before_script:
-  - docker info
-
-
+---
 stages:
   - build
 
-build:fisica-particelle-atlas:
+build:fisica-particelle-atlas: &build_template
+  image: docker:stable
   stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker info
   variables:
-    CONTAINER_IMAGE: airiopenlab/fisica-particelle-atlas
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    CONTAINER_IMAGE: fisica-particelle-atlas
+    REPOSITORY: airiopenlab
   script:
+    - export QUAL_NAME=${REPOSITORY}/${CONTAINER_IMAGE}
     - mkdir -p $HOME/.docker
     - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
-    - docker pull $CONTAINER_IMAGE:latest || true
-    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest ./fisica-particelle-atlas/
-    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
-    - docker push $CONTAINER_IMAGE:latest
+    - docker pull $QUAL_NAME:latest || true
+    - docker build --cache-from $QUAL_NAME:latest --tag $QUAL_NAME:$CI_BUILD_REF --tag $QUAL_NAME:latest ./${CONTAINER_IMAGE}/
+    - docker push $QUAL_NAME:$CI_BUILD_REF
+    - docker push $QUAL_NAME:latest
   only:
     - web
 
-build:fisica-stato-solido:
-  stage: build
+build:fisica-stato-solido: 
+  <<: *build_template
   variables:
-    CONTAINER_IMAGE: airiopenlab/fisica-stato-solido
-  script:
-    - mkdir -p $HOME/.docker
-    - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
-    - docker pull $CONTAINER_IMAGE:latest || true
-    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest ./fisica-stato-solido/
-    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
-    - docker push $CONTAINER_IMAGE:latest
-  only:
-    - web
+    CONTAINER_IMAGE: fisica-stato-solido
