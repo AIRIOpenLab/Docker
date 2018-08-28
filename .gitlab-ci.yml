@@ -9,7 +9,7 @@ build:fisica-particelle-atlas: &build_template
     - docker:dind
   before_script:
     - docker info
-  variables:
+  variables: &variables
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
     CONTAINER_IMAGE: fisica-particelle-atlas
@@ -28,4 +28,5 @@ build:fisica-particelle-atlas: &build_template
 build:fisica-stato-solido: 
   <<: *build_template
   variables:
+    <<: *variables
     CONTAINER_IMAGE: fisica-stato-solido
