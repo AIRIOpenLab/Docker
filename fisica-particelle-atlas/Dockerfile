@@ -4,20 +4,20 @@ LABEL maintainer="AIRI OpenLab <openlab@airicerca.org>"
 
 USER	builder
 
-RUN	sudo apt-get update && sudo apt-get install -y --no-install-recommends wget vim python-pip python-wheel python-setuptools && \
+RUN	sudo apt-get update && sudo apt-get install -y --no-install-recommends wget vim python-pip python-wheel python-setuptools python-tk && \
 	sudo apt-get clean && \
 	sudo rm -rf /var/lib/apt/lists/*
 
-RUN 	sudo -H pip install --upgrade pip wheel jupyter
+RUN 	sudo -H pip install --upgrade pip wheel jupyter matplotlib
 
-ADD     https://github.com/atlas-outreach-data-tools/atlas-outreach-data-tools-framework/archive/master.zip /tmp/master.zip 
+ADD     https://github.com/AIRIOpenLab/atlas-outreach-data-tools-framework/archive/master.zip /tmp/master.zip 
 
 RUN    	unzip /tmp/master.zip -d /tmp && sudo mv /tmp/atlas-outreach-data-tools-framework-master /usr/lib/python2.7/atlas_tools && sudo rm /tmp/master.zip && \
-       	sudo mkdir -p /usr/lib/python2.7/atlas_tools/Input/MC && sudo mkdir -p /usr/lib/python2.7/atlas_tools/Input/Data
+       	sudo mkdir -p /opendata/MC && sudo mkdir -p /opendata/Data
 
-ADD     http://opendata.atlas.cern/release/samples/MC/mc_117049.ttbar_had.root /usr/lib/python2.7/atlas_tools/Input/MC/mc_117049.ttbar_had.root
-ADD     http://opendata.atlas.cern/release/samples/MC/mc_117050.ttbar_lep.root /usr/lib/python2.7/atlas_tools/Input/MC/mc_117049.ttbar_lep.root
-ADD     http://opendata.atlas.cern/release/samples/Data/DataMuons.root /usr/lib/python2.7/atlas_tools/Input/Data/DataMuons.root 
+ADD     http://opendata.atlas.cern/release/samples/MC/mc_117049.ttbar_had.root /opendata/MC/mc_117049.ttbar_had.root
+ADD     http://opendata.atlas.cern/release/samples/MC/mc_117050.ttbar_lep.root /opendata/MC/mc_117049.ttbar_lep.root
+ADD     http://opendata.atlas.cern/release/samples/Data/DataMuons.root /opendata/Data/DataMuons.root 
 
 RUN     for i in $(find /usr/lib/python2.7/atlas_tools -type d); do sudo touch $i/__init__.py; done 
 
