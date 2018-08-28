@@ -4,22 +4,23 @@ LABEL maintainer="AIRI OpenLab <openlab@airicerca.org>"
 
 USER	builder
 
-RUN	sudo apt-get update && sudo apt-get install -y --no-install-recommends wget vim python-pip python-wheel python-setuptools python-tk && \
+# python-tk
+RUN	sudo apt-get update && sudo apt-get install -y --no-install-recommends wget vim python-pip python-wheel python-setuptools && \
 	sudo apt-get clean && \
 	sudo rm -rf /var/lib/apt/lists/*
 
-RUN 	sudo -H pip install --upgrade pip wheel jupyter matplotlib
+RUN 	sudo -H pip install --upgrade pip wheel jupyter 
+# matplotlib
 
 ADD     https://github.com/AIRIOpenLab/atlas-outreach-data-tools-framework/archive/master.zip /tmp/master.zip 
 
 RUN    	unzip /tmp/master.zip -d /tmp && sudo mv /tmp/atlas-outreach-data-tools-framework-master /usr/lib/python2.7/atlas_tools && sudo rm /tmp/master.zip && \
        	sudo mkdir -p /opendata/MC && sudo mkdir -p /opendata/Data
 
-ADD     http://opendata.atlas.cern/release/samples/MC/mc_117049.ttbar_had.root /opendata/MC/mc_117049.ttbar_had.root
-ADD     http://opendata.atlas.cern/release/samples/MC/mc_117050.ttbar_lep.root /opendata/MC/mc_117049.ttbar_lep.root
-ADD     http://opendata.atlas.cern/release/samples/Data/DataMuons.root /opendata/Data/DataMuons.root 
+ADD      http://opendata.atlas.cern/release/samples/complete_set_of_ATLAS_open_data_samples_July_2016.zip /tmp/alldata.zip
 
-RUN     for i in $(find /usr/lib/python2.7/atlas_tools -type d); do sudo touch $i/__init__.py; done 
+RUN     for i in $(find /usr/lib/python2.7/atlas_tools -type d); do sudo touch $i/__init__.py; done && \
+	unzip /tmp/alldata.zip -d /opendata && rm -rf /tmp/alldata.zip
 
 EXPOSE 	8888
 WORKDIR $HOME
