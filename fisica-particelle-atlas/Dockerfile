@@ -13,12 +13,14 @@ RUN 	sudo -H pip install --upgrade pip wheel jupyter
 # matplotlib
 
 ADD     https://github.com/AIRIOpenLab/atlas-outreach-data-tools-framework/archive/master.zip /tmp/master.zip 
-ADD     http://opendata.atlas.cern/release/samples/complete_set_of_ATLAS_open_data_samples_July_2016.zip /tmp/alldata.zip
+#ADD     http://opendata.atlas.cern/release/samples/complete_set_of_ATLAS_open_data_samples_July_2016.zip /tmp/alldata.zip
 
 RUN    	sudo unzip /tmp/master.zip -d /tmp && sudo mv /tmp/atlas-outreach-data-tools-framework-master /usr/lib/python2.7/atlas_tools && sudo rm /tmp/master.zip && \
        	sudo mkdir -p /opendata/MC && sudo mkdir -p /opendata/Data && \
-        for i in $(find /usr/lib/python2.7/atlas_tools -type d); do sudo touch $i/__init__.py; done && \
-	sudo unzip /tmp/alldata.zip -d /opendata && sudo rm /tmp/alldata.zip
+        for i in $(find /usr/lib/python2.7/atlas_tools -type d); do sudo touch $i/__init__.py; done
+
+ADD     http://opendata.atlas.cern/release/samples/MC/mc_147770.Zee.root /opendata/MC/mc_147770.Zee.root
+ADD     http://opendata.atlas.cern/release/samples/Data/DataEgamma.root /opendata/Data/DataEgamma.root
 
 EXPOSE 	8888
 WORKDIR $HOME
