@@ -6,7 +6,7 @@ LABEL maintainer="AIRI OpenLab <openlab@airicerca.org>"
 RUN	sudo apt-get update && sudo apt-get install -y --no-install-recommends wget vim python-pip python-wheel python-setuptools && \
 	sudo apt-get clean && \
 	sudo rm -rf /var/lib/apt/lists/* && \
-	sudo useradd -u 1000 -U jovyan
+	sudo useradd -u 1000 -U jovyan && sudo adduser jovyan sudo
 
 RUN 	sudo -H pip install --upgrade pip wheel jupyter 
 # matplotlib
