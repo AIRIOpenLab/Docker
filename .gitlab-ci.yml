@@ -18,8 +18,7 @@ build:fisica-particelle-atlas: &build_template
     - export QUAL_NAME=${REPOSITORY}/${CONTAINER_IMAGE}
     - mkdir -p $HOME/.docker
     - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
-    - docker pull $QUAL_NAME:latest || true
-    - docker build --cache-from $QUAL_NAME:latest --tag $QUAL_NAME:$CI_BUILD_REF --tag $QUAL_NAME:latest ./${CONTAINER_IMAGE}/
+    - docker build --tag $QUAL_NAME:$CI_BUILD_REF --tag $QUAL_NAME:latest ./${CONTAINER_IMAGE}/
     - docker push $QUAL_NAME:$CI_BUILD_REF
     - docker push $QUAL_NAME:latest
   only:
