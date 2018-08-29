@@ -16,7 +16,7 @@ RUN	sudo apt-get update && sudo apt-get install -yq --no-install-recommends wget
 	sudo apt-get clean && \
 	sudo rm -rf /var/lib/apt/lists/*
 
-RUN 	sudo -H pip install --upgrade pip wheel jupyter 
+RUN 	sudo -H pip install --no-cache-dir --upgrade pip wheel jupyter 
 # matplotlib
 
 ADD     https://github.com/AIRIOpenLab/atlas-outreach-data-tools-framework/archive/master.zip /tmp/master.zip 
